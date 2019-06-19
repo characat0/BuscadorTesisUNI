@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.List;
 
 
 public class Main {
@@ -6,8 +7,10 @@ public class Main {
     public static void main(String[] args)
     throws SQLException {
         Buscador buscador = new Buscador("repositorio.db");
-        buscador.buscaTesisPorAutor("Glen Dario","Rodriguez Rafael");
-
+        List<Tesis> tesises = buscador.buscaTesisPorAutor("Juan","Perez");
+        tesises.forEach((tesis -> {
+            System.out.println(tesis.toString());
+        }));
 
 
     }

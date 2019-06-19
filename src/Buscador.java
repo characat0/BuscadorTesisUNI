@@ -39,10 +39,7 @@ public class Buscador {
     throws SQLException {
         //PreparedStatement stmt;
         String query = "SELECT COUNT(*) FROM " + table + " " + condition;
-        System.out.println(query);
         Statement stmt = conn.createStatement();
-
-        //stmt = conn.prepareStatement(query);
         ResultSet set = stmt.executeQuery(query);
         return set.getInt(1);
     }
@@ -51,76 +48,84 @@ public class Buscador {
         String query = "SELECT * FROM " + table + " " + condition;
         Statement stmt = conn.createStatement();
         ResultSet set = stmt.executeQuery(query);
-        stmt.close();
         return set;
+    }
+    public List<Integer> PersonaIdPorApellido (String apellido) throws SQLException {
+        List<Integer> ids = new ArrayList<>();
+        apellido = quitaTildes(apellido);
+        String table = "Personas", condition = "WHERE nombre LIKE '%"+apellido+"%'";
+        int numero = cuentaResultados(table,condition);
+        if (numero > 0) {
+            ResultSet set = obtenResultados(table,condition);
+            while(set.next()) {
+                ids.add(set.getInt("id"));
+            }
+            set.close();
+        }
+        return ids;
     }
     public List<Integer> PersonaIdPorNombre (String nombre)
     throws SQLException {
         List<Integer> ids = new ArrayList<Integer>();
-        int numero = cuentaResultados("Personas", "WHERE nombre LIKE '%" + nombre + "%'");
-        if (numero > 0) {
-            PreparedStatement stmt;
-            stmt = conn.prepareStatement("SELECT id FROM Personas WHERE Nombre LIKE '%" + nombre + "%'");
-            ResultSet set = stmt.executeQuery();
+        String table = "Personas",condition = "WHERE nombre LIKE '%,%" + nombre + "%'";
+        int num = cuentaResultados(table,condition);
+        if (num > 0) {
+            ResultSet set = obtenResultados(table, condition);
             while(set.next()) {
                 ids.add(set.getInt("id"));
             }
+            set.close();
         }
         return ids;
     }
-    public List<Integer> PersonaIdPorNombre (String nombre,String apellido)
+    public List<Integer> PersonaIdPorNombreCompleto (String nombre,String apellido)
             throws SQLException {
-        List<Integer> ids1 = new ArrayList<Integer>();
-        List<Integer> ids2 = new ArrayList<Integer>();
-        int numero1 = cuentaResultados("Personas", "WHERE nombre LIKE '%,%" + nombre + "%'");
-        int numero2 = cuentaResultados("Personas","WHERE nombre LIKE '%"+apellido+"%'");
-        if (numero1 > 0 && numero2 > 0) {
-            PreparedStatement stmt;
-            ResultSet set;
-            stmt = conn.prepareStatement("SELECT id FROM Personas WHERE nombre LIKE '%" + nombre + "%'");
-            set = stmt.executeQuery();
-            while(set.next()) {
-                ids1.add(set.getInt("id"));
-            }
-            stmt = conn.prepareStatement("SELECT id FROM Personas WHERE nombre LIKE '%,%"+apellido+"%'");
-            set = stmt.executeQuery();
-            while(set.next()) {
-                ids2.add(set.getInt("id"));
-            }
-        }
+        List<Integer> ids1 = PersonaIdPorNombre(nombre), ids2 = PersonaIdPorApellido(apellido);
+
         return intersect(ids1,ids2);
     }
-    public void buscaTesisPorAutor (String nombre) throws SQLException{
+    private List<Tesis> buscaTesisPorIdAutor(List<Integer> AutoresIDs) throws SQLException {
+        List<Tesis> tesisList = new ArrayList<>();
         PreparedStatement stmt;
-        nombre = quitaTildes(nombre);
-        List<Integer> AutoresIDs = PersonaIdPorNombre(nombre);
         String lista = AutoresIDs.toString().replace('[','(').replace(']',')');
-        int numero = cuentaResultados("Tesis","WHERE (Autor1ID IN "+lista+") OR (Autor2ID IN "+lista+")");
+        String table = "Tesis",condition = "WHERE (Autor1ID IN "+lista+") OR (Autor2ID IN "+lista+")";
+        int numero = cuentaResultados(table,condition);
         if (numero > 0) {
-            stmt = conn.prepareStatement("SELECT * FROM Tesis WHERE (Autor1ID IN "+lista+") OR (Autor2ID IN "+lista+")");
-            ResultSet set = stmt.executeQuery();
+            ResultSet set = obtenResultados(table,condition);
             while (set.next()) {
-                Tesis prueba = new Tesis(set);
-                prueba.setPersonas(conn);
-                System.out.println(prueba.toString());
+                Tesis tesis = new Tesis(set);
+                tesis.setData(conn);
+                tesisList.add(tesis);
             }
         }
+        return tesisList;
     }
-    public void buscaTesisPorAutor (String nombre, String apellido) throws SQLException{
+    public List<Tesis> buscaTesisPorNombreAutor (String nombre) throws SQLException{
+        nombre = quitaTildes(nombre);
+        List<Integer> AutoresIDs = PersonaIdPorNombre(nombre);
+        return buscaTesisPorIdAutor(AutoresIDs);
+    }
+    public List<Tesis> buscaTesisPorApellidoAutor (String apellido) throws SQLException {
+        apellido = quitaTildes(apellido);
+        List<Integer> AutoresIDs = PersonaIdPorApellido(apellido);
+        return buscaTesisPorIdAutor(AutoresIDs);
+    }
+    public List<Tesis> buscaTesisPorAutor(String nombre, String apellido) throws SQLException{
         PreparedStatement stmt;
         nombre = quitaTildes(nombre);
         apellido = quitaTildes(apellido);
-        List<Integer> AutoresIDs = PersonaIdPorNombre(nombre,apellido);
-        String lista = AutoresIDs.toString().replace('[','(').replace(']',')');
-        int numero = cuentaResultados("Tesis","WHERE (Autor1ID IN "+lista+") OR (Autor2ID IN "+lista+")");
-        if (numero > 0) {
-            stmt = conn.prepareStatement("SELECT * FROM Tesis WHERE (Autor1ID IN "+lista+") OR (Autor2ID IN "+lista+")");
-            ResultSet set = stmt.executeQuery();
-            while (set.next()) {
-                Tesis prueba = new Tesis(set);
-                prueba.setPersonas(conn);
-                System.out.println(prueba.toString());
-            }
+        List<Integer> AutoresIDs;
+        if (nombre.equals("")) {
+            AutoresIDs = PersonaIdPorApellido(apellido);
+        } else if (apellido.equals("")) {
+            AutoresIDs = PersonaIdPorNombre(nombre);
+        } else {
+            AutoresIDs = PersonaIdPorNombreCompleto(nombre,apellido);
         }
+        return buscaTesisPorIdAutor(AutoresIDs);
     }
+
+
+
+
 }
