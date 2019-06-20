@@ -79,14 +79,41 @@ public class Buscador {
     }
     private List<Integer> PersonaIdPorNombreCompleto (String nombre,String apellido)
             throws SQLException {
-        List<Integer> ids1 = PersonaIdPorNombre(nombre), ids2 = PersonaIdPorApellido(apellido);
-        return intersect(ids1,ids2);
+        nombre = quitaTildes(nombre);
+        apellido = quitaTildes(apellido);
+        List<Integer> PersonasIDs;
+        if (nombre.equals("") && apellido.equals("")) return new ArrayList<Integer>();
+        if (nombre.equals("")) {
+            PersonasIDs = PersonaIdPorApellido(apellido);
+        } else if (apellido.equals("")) {
+            PersonasIDs = PersonaIdPorNombre(nombre);
+        } else {
+            List<Integer> ids1 = PersonaIdPorNombre(nombre), ids2 = PersonaIdPorApellido(apellido);
+            PersonasIDs = intersect(ids1,ids2);
+        }
+        return PersonasIDs;
     }
     private List<Tesis> buscaTesisPorIdAutor(List<Integer> AutoresIDs) throws SQLException {
         List<Tesis> tesisList = new ArrayList<>();
         PreparedStatement stmt;
         String lista = AutoresIDs.toString().replace('[','(').replace(']',')');
         String table = "Tesis",condition = "WHERE (Autor1ID IN "+lista+") OR (Autor2ID IN "+lista+")";
+        int numero = cuentaResultados(table,condition);
+        if (numero > 0) {
+            ResultSet set = obtenResultados(table,condition);
+            while (set.next()) {
+                Tesis tesis = new Tesis(set);
+                tesis.setData(conn);
+                tesisList.add(tesis);
+            }
+        }
+        return tesisList;
+    }
+    private List<Tesis> buscaTesisPorIdAsesor(List<Integer> AutoresIDs) throws SQLException {
+        List<Tesis> tesisList = new ArrayList<>();
+        PreparedStatement stmt;
+        String lista = AutoresIDs.toString().replace('[','(').replace(']',')');
+        String table = "Tesis",condition = "WHERE (Asesor1ID IN "+lista+") OR (Asesor2ID IN "+lista+")";
         int numero = cuentaResultados(table,condition);
         if (numero > 0) {
             ResultSet set = obtenResultados(table,condition);
@@ -109,18 +136,12 @@ public class Buscador {
         return buscaTesisPorIdAutor(AutoresIDs);
     }
     public List<Tesis> buscaTesisPorAutor(String nombre, String apellido) throws SQLException{
-        nombre = quitaTildes(nombre);
-        apellido = quitaTildes(apellido);
-        List<Integer> AutoresIDs;
-        if (nombre.equals("") && apellido.equals("")) return new ArrayList<Tesis>();
-        if (nombre.equals("")) {
-            AutoresIDs = PersonaIdPorApellido(apellido);
-        } else if (apellido.equals("")) {
-            AutoresIDs = PersonaIdPorNombre(nombre);
-        } else {
-            AutoresIDs = PersonaIdPorNombreCompleto(nombre,apellido);
-        }
+        List<Integer> AutoresIDs = PersonaIdPorNombreCompleto(nombre, apellido);
         return buscaTesisPorIdAutor(AutoresIDs);
+    }
+    public List<Tesis> buscaTesisPorAsesor(String nombre, String apellido) throws SQLException {
+        List<Integer> AsesoresIDs = PersonaIdPorNombreCompleto(nombre, apellido);
+        return buscaTesisPorIdAsesor(AsesoresIDs);
     }
     public List<Tesis>  buscaTesisPorEspecialidad (String nombre) throws SQLException {
         List<Tesis> tesisList = new ArrayList<>();
@@ -128,7 +149,7 @@ public class Buscador {
         ResultSet set = obtenResultados(table,condition);
         String id = set.getString("id");
         table = "Tesis";
-        condition = "WHERE EspecId=" + id;
+        condition = "WHERE Especialidad='" + id + "'";
         set = obtenResultados(table,condition);
         while (set.next()) {
             Tesis tesis = new Tesis(set);
