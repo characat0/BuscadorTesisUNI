@@ -52,7 +52,7 @@ public class Buscador {
     private List<Integer> PersonaIdPorApellido (String apellido) throws SQLException {
         List<Integer> ids = new ArrayList<>();
         apellido = quitaTildes(apellido);
-        String table = "Personas", condition = "WHERE nombre LIKE '%"+apellido+"%'";
+        String table = "Personas", condition = "WHERE nombre LIKE '%"+apellido+"%,%'";
         int numero = cuentaResultados(table,condition);
         if (numero > 0) {
             ResultSet set = obtenResultados(table,condition);
@@ -137,7 +137,18 @@ public class Buscador {
         }
         return tesisList;
     }
-
+    public List<Tesis> buscaTesisPorTitulo (String titulo) throws SQLException {
+        List<Tesis> tesisList = new ArrayList<>();
+        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM Tesis WHERE titulo=?");
+        stmt.setString(1,titulo);
+        ResultSet set = stmt.executeQuery();
+        while (set.next()) {
+            Tesis tesis = new Tesis(set);
+            tesis.setData(conn);
+            tesisList.add(tesis);
+        }
+        return tesisList;
+    }
 
 
 }
