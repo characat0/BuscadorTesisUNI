@@ -106,6 +106,7 @@ public class Buscador {
                 tesis.setData(conn);
                 tesisList.add(tesis);
             }
+            set.close();
         }
         return tesisList;
     }
@@ -122,6 +123,7 @@ public class Buscador {
                 tesis.setData(conn);
                 tesisList.add(tesis);
             }
+            set.close();
         }
         return tesisList;
     }
@@ -156,6 +158,7 @@ public class Buscador {
             tesis.setData(conn);
             tesisList.add(tesis);
         }
+        set.close();
         return tesisList;
     }
     public List<Tesis> buscaTesisPorTitulo (String titulo) throws SQLException {
