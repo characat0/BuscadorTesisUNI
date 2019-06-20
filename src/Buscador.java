@@ -173,6 +173,27 @@ public class Buscador {
         }
         return tesisList;
     }
-
+    public List<String> buscaFacultades () throws SQLException {
+        String table = "Facultades", condition = "";
+        ResultSet set = obtenResultados(table,condition);
+        List<String> facultades = new ArrayList<>();
+        while(set.next()) {
+            facultades.add(set.getString("nombre"));
+        }
+        set.close();
+        return facultades;
+    }
+    public List<String> buscaEspecialidades (String facultad) throws SQLException {
+        PreparedStatement stmt;
+        stmt = conn.prepareStatement("SELECT Especialidades.nombre FROM Especialidades,Facultades WHERE Especialidades.facuId=Facultades.id AND Facultades.nombre=?");
+        stmt.setString(1,facultad);
+        ResultSet set = stmt.executeQuery();
+        List<String> especialidades = new ArrayList<>();
+        while(set.next()) {
+            especialidades.add(set.getString("nombre"));
+        }
+        set.close();
+        return especialidades;
+    }
 
 }
