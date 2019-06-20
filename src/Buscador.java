@@ -15,9 +15,8 @@ public class Buscador {
         List<Integer> interseccion = new ArrayList<>();
         for (int i = 0; i < primera.size(); i++) {
             int prueba = primera.get(i);
-            if (segunda.indexOf(prueba) != -1) {
+            if (segunda.indexOf(prueba) != -1)
                 interseccion.add(prueba);
-            }
         }
         return interseccion;
     }
@@ -50,7 +49,7 @@ public class Buscador {
         ResultSet set = stmt.executeQuery(query);
         return set;
     }
-    public List<Integer> PersonaIdPorApellido (String apellido) throws SQLException {
+    private List<Integer> PersonaIdPorApellido (String apellido) throws SQLException {
         List<Integer> ids = new ArrayList<>();
         apellido = quitaTildes(apellido);
         String table = "Personas", condition = "WHERE nombre LIKE '%"+apellido+"%'";
@@ -64,7 +63,7 @@ public class Buscador {
         }
         return ids;
     }
-    public List<Integer> PersonaIdPorNombre (String nombre)
+    private List<Integer> PersonaIdPorNombre (String nombre)
     throws SQLException {
         List<Integer> ids = new ArrayList<Integer>();
         String table = "Personas",condition = "WHERE nombre LIKE '%,%" + nombre + "%'";
@@ -78,10 +77,9 @@ public class Buscador {
         }
         return ids;
     }
-    public List<Integer> PersonaIdPorNombreCompleto (String nombre,String apellido)
+    private List<Integer> PersonaIdPorNombreCompleto (String nombre,String apellido)
             throws SQLException {
         List<Integer> ids1 = PersonaIdPorNombre(nombre), ids2 = PersonaIdPorApellido(apellido);
-
         return intersect(ids1,ids2);
     }
     private List<Tesis> buscaTesisPorIdAutor(List<Integer> AutoresIDs) throws SQLException {
@@ -111,10 +109,10 @@ public class Buscador {
         return buscaTesisPorIdAutor(AutoresIDs);
     }
     public List<Tesis> buscaTesisPorAutor(String nombre, String apellido) throws SQLException{
-        PreparedStatement stmt;
         nombre = quitaTildes(nombre);
         apellido = quitaTildes(apellido);
         List<Integer> AutoresIDs;
+        if (nombre.equals("") && apellido.equals("")) return new ArrayList<Tesis>();
         if (nombre.equals("")) {
             AutoresIDs = PersonaIdPorApellido(apellido);
         } else if (apellido.equals("")) {
@@ -124,7 +122,21 @@ public class Buscador {
         }
         return buscaTesisPorIdAutor(AutoresIDs);
     }
-
+    public List<Tesis>  buscaTesisPorEspecialidad (String nombre) throws SQLException {
+        List<Tesis> tesisList = new ArrayList<>();
+        String table = "Especialidades", condition = "WHERE nombre=" + nombre;
+        ResultSet set = obtenResultados(table,condition);
+        String id = set.getString("id");
+        table = "Tesis";
+        condition = "WHERE EspecId=" + id;
+        set = obtenResultados(table,condition);
+        while (set.next()) {
+            Tesis tesis = new Tesis(set);
+            tesis.setData(conn);
+            tesisList.add(tesis);
+        }
+        return tesisList;
+    }
 
 
 
