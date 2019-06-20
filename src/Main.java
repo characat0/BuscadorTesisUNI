@@ -7,7 +7,8 @@ public class Main {
     public static void main(String[] args)
     throws SQLException {
         Buscador buscador = new Buscador("repositorio.db");
-        List<Tesis> tesises = buscador.buscaTesisPorAutor("Juan","");
+        List<Tesis> tesises;
+        tesises = buscador.buscaTesisPorTitulo("Reconocimiento de voz");
         tesises.forEach((tesis -> {
             System.out.println(tesis.toString());
         }));

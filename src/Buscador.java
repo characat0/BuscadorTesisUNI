@@ -124,7 +124,7 @@ public class Buscador {
     }
     public List<Tesis>  buscaTesisPorEspecialidad (String nombre) throws SQLException {
         List<Tesis> tesisList = new ArrayList<>();
-        String table = "Especialidades", condition = "WHERE nombre=" + nombre;
+        String table = "Especialidades", condition = "WHERE nombre='" + nombre+"'";
         ResultSet set = obtenResultados(table,condition);
         String id = set.getString("id");
         table = "Tesis";

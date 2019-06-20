@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="8a5f936c-a484-4cfc-9ecc-e46339d0ac20" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Buscador.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Buscador.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,11 +14,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="63" selection-start-line="9" selection-start-column="63" selection-end-line="9" selection-end-column="63" />
+            <state relative-caret-position="170">
+              <caret line="10" column="72" selection-start-line="10" selection-start-column="72" selection-end-line="10" selection-end-column="72" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -26,11 +26,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Buscador.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="529">
-              <caret line="149" column="25" selection-start-line="149" selection-start-column="25" selection-end-line="149" selection-end-column="25" />
+            <state relative-caret-position="257">
+              <caret line="139" column="80" lean-forward="true" selection-start-line="139" selection-start-column="80" selection-end-line="139" selection-end-column="80" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2466#2475#0" expanded="true" />
@@ -69,8 +69,8 @@
       <list>
         <option value="$PROJECT_DIR$/out/.gitignore" />
         <option value="$PROJECT_DIR$/src/Tesis.java" />
-        <option value="$PROJECT_DIR$/src/Main.java" />
         <option value="$PROJECT_DIR$/src/Buscador.java" />
+        <option value="$PROJECT_DIR$/src/Main.java" />
       </list>
     </option>
   </component>
@@ -195,7 +195,8 @@
     <MESSAGE value="Buscador de Tesis&#10;&#10;Proyecto final de LPOO en FIIS-UNI, buscador de tesis que se encuentran en una base de datos de sqlite." />
     <MESSAGE value="Mejora de Busqueda&#10;&#10;Busqueda por nombre y apellido, detecta falta de nombre o de apellido, listo para integrar a un cuadro de busqueda." />
     <MESSAGE value="Busqueda por Especialidad&#10;&#10;Añadida la busqueda por especialidad en la clase Buscador." />
-    <option name="LAST_COMMIT_MESSAGE" value="Busqueda por Especialidad&#10;&#10;Añadida la busqueda por especialidad en la clase Buscador." />
+    <MESSAGE value="Busca tesis por titulo&#10;&#10;Se añadio el metodo de busqueda de tesis por titulo" />
+    <option name="LAST_COMMIT_MESSAGE" value="Busca tesis por titulo&#10;&#10;Se añadio el metodo de busqueda de tesis por titulo" />
   </component>
   <component name="editorHistoryManager">
     <entry file="jar://C:/Program Files/Java/jdk-11.0.2/lib/src.zip!/java.base/java/util/regex/Matcher.java">
@@ -253,23 +254,23 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/Buscador.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="63" selection-start-line="9" selection-start-column="63" selection-end-line="9" selection-end-column="63" />
+        <state relative-caret-position="257">
+          <caret line="139" column="80" lean-forward="true" selection-start-line="139" selection-start-column="80" selection-end-line="139" selection-end-column="80" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#2466#2475#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Buscador.java">
+    <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="529">
-          <caret line="149" column="25" selection-start-line="149" selection-start-column="25" selection-end-line="149" selection-end-column="25" />
+        <state relative-caret-position="170">
+          <caret line="10" column="72" selection-start-line="10" selection-start-column="72" selection-end-line="10" selection-end-column="72" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2466#2475#0" expanded="true" />
           </folding>
         </state>
       </provider>
